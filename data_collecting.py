@@ -7,7 +7,7 @@ import re
 
 class Scraper:
 
-    data: dict[Any]
+    data: list[Any]
     url: str
 
     def __init__(self, url):
@@ -36,16 +36,25 @@ class Scraper:
                     found_data[i] = float(found_data[i])
                 data.append(found_data)
 
-        data_set = {}
+        data_set = []
         for i in data:
-            year = int(i[0])
-            data_set[year] = [{"avg_stock_price": i[1]},
-                              {"year_open": i[2]},
-                              {"year_high": i[3]},
-                              {"year_low": i[4]},
-                              {"year_close": i[5]},
-                              {"annual_precent_change": i[6]}]
+            data_set.append([{"year": int(i[0])},
+                             {"avg_stock_price": i[1]},
+                             {"year_open": i[2]},
+                             {"year_high": i[3]},
+                             {"year_low": i[4]},
+                             {"year_close": i[5]},
+                             {"annual_precent_change": i[6]}])
         self.data = data_set
 
-    def get_data(self) -> dict[Any]:
+    def get_data(self) -> list[Any]:
         return self.data
+
+    def get_simple_data(self) -> list[[int, float]]:
+        simple_data = []
+
+        for i in self.data:
+            temp_data = [i[0]['year'], i[1]['avg_stock_price']]
+            simple_data.insert(0, temp_data)
+
+        return simple_data
